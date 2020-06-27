@@ -8,6 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
+/**
+ * This class holds line information to provide easy way to manage.
+ * @author afettah
+ *
+ */
 class Account implements Comparable<Account> {
 	public static final int controlDigitStart = 0;
 	public static final int bankCodeStart = 3;
@@ -17,6 +22,10 @@ class Account implements Comparable<Account> {
 	String bankCode;
 	String ownerCode;
 	
+	/**
+	 * This constructor will parse the line and store the useful information.
+	 * @param line
+	 */
 	public Account(String line) {
 		this.controlDigit = line.substring(Account.controlDigitStart, Account.controlDigitStart+2);
 		this.bankCode = line.substring(Account.bankCodeStart, Account.bankCodeStart+8);
@@ -61,29 +70,44 @@ class Account implements Comparable<Account> {
 	}
 }
 
+/**
+ * This class contains information about list of accounts and count how many time they repeated.
+ * @author afettah
+ *
+ */
 class TestCase {
+	/**
+	 * This map stores the records in test case as sorted.
+	 */
 	TreeMap<Account, Integer> sortedRecords = new TreeMap<>();
-	int testNumber;
 	int recordCount;
 	
-	public TestCase(int testNumber) {
-		this.testNumber = testNumber;
-	}
-	
+	/**
+	 * This function reads test case records from start to the end. 
+	 * @param reader
+	 * @throws NumberFormatException This exception will throw if there is at least one non well formed records. 
+	 * @throws IOException
+	 */
 	public void readCase(BufferedReader reader) throws NumberFormatException, IOException {
+		/* Get how many records we have in the test case. */
 		this.recordCount = Integer.parseInt(reader.readLine());
 		Account ac;
 		for (int i = 0; i < this.recordCount; i++) {
+			/* Create a new Account object for every line of record. */
 			ac = new Account(reader.readLine());
+			/* Let's check did we see same person before? */
 			if(this.sortedRecords.containsKey(ac)) {
+				/* Increase repeat count of person. */
 				Integer value = this.sortedRecords.get(ac);
 				value++;
 				this.sortedRecords.put(ac, value);
 			} else {
+				/* Add new person to our hash map. */
 				this.sortedRecords.put(ac, 1);
 			}
 		}
 		
+		/* Let's write what we got from the test case. */
 		Iterator<Account> iterator = sortedRecords.keySet().iterator();
 		while(iterator.hasNext()) {
 		    Account key   = (Account) iterator.next();
@@ -93,27 +117,37 @@ class TestCase {
 	}
 }
 
+/**
+ * This class manages generic setting about the file.
+ * @author afettah
+ *
+ */
 class Test {
 	String fileName;
 	int testCount;
-	List<TestCase> cases;
 	
+	/**
+	 * Give file name to be parse.
+	 * @param fileName
+	 */
 	public Test(String fileName) {
 		this.fileName = fileName;
 		this.readFile();
 	}
 	
 	public void readFile() {
-		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader(this.fileName));
+			BufferedReader reader = new BufferedReader(new FileReader(this.fileName));
 			String line = reader.readLine();
+			/* Get how many test case we have in the file. */
 			this.testCount = Integer.parseInt(line);
-			this.cases = new ArrayList<TestCase>(this.testCount);
+			TestCase tc;
 			for (int counter = 0; counter < this.testCount; counter++) {
-				TestCase tc = new TestCase(counter);
-				this.cases.add(tc);
+				/* Create new TestCase object for every case in the file. */
+				tc = new TestCase();
+				/* Let's read/parse records of the test case. */
 				tc.readCase(reader);
+				/* Don't write a new empty line if last test case is processing. */
 				if (counter!=this.testCount-1)
 					System.out.println();
 				reader.readLine();
@@ -127,7 +161,6 @@ class Test {
 }
 
 public class Exercise3 {
-	
 	public static void main (String[] args) {
 		Test t = new Test("myfile.txt");
 	}
