@@ -1,8 +1,6 @@
 package exercises1;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Exercise2 {
 	
@@ -22,7 +20,6 @@ public class Exercise2 {
 			}
 			toLeft=toLeft+arr.length;
 		}
-		int[] res = new int[arr.length];
 		int[] accumulate1 = new int[arr.length-toLeft];
 		accumulate1 = Arrays.copyOfRange(arr, toLeft, arr.length);
 		int[] accumulate2 = new int[toLeft];
